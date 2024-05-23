@@ -1,0 +1,28 @@
+<!-- templates/chatbot/stats.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Статистика запросов</title>
+</head>
+<body>
+    <h1>Статистика запросов по часам</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Час</th>
+                <th>Количество запросов</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in hourly_stats %}
+            <tr>
+                <td>{{ item.timestamp__hour }}</td>
+                <td>{{ item.num_requests }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

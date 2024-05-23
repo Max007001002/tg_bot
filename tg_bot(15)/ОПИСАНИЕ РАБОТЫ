@@ -1,0 +1,62 @@
+Добавлен файл в chat bot  urls:
+
+# Добавил библиотеки 
+
+# в urlpatterns были добавлены:
+# работа со стартовой странице
+# работа с самим ботом
+# добавлен новый путь, чтобы отображалсь статистика запросов, обновляемая какждый час (в виде таблице, которая прпоисана в файлах html - stats)
+
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("", views.start, name="start"),
+    path('home/', views.home, name='home'),  # Исправлен путь для главной страницы
+    path("chatbot/", views.chatbot, name='chatbot'),
+    path('stats/', views.stats, name='stats'),  # Новый путь для страницы статистики
+]
+
+
+
+# Так же была произведенена работа с файлом views в chat bot, а именно:
+
+# запуск библиотек, для работы данных комманд
+# так же возврат статистики да всех ссылках
+
+from django.shortcuts import render
+from django.db.models import Count
+from .models import Request  # Импортируем модель Request для использования в статистике
+
+def home(request):
+    return render(request, 'home.html')
+
+def start(request):
+    return render(request, 'start.html')
+
+def chatbot(request):
+    return render(request, 'chatbot.html')
+
+def stats(request):
+    # Получаем статистику по часам
+    hourly_stats = Request.objects.values('timestamp__hour').annotate(num_requests=Count('id'))
+
+    return render(request, 'stats.html', {'hourly_stats': hourly_stats})
+
+
+# Так же в файле start (стартовая страница), была прописана кнопка статистики:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Заголовок страницы</title>
+</head>
+<body>
+    <h1>Заголовок страницы</h1>
+
+    <a href="{% url 'stats' %}"><button>Статистика</button></a>
+
+    <!-- Другие элементы или содержимое страницы -->
+</body>
+</html>
